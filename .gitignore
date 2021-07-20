@@ -1,0 +1,9 @@
+# vim
+.swp
+
+# env
+.env
+
+.DS_Store
+
+vendor
