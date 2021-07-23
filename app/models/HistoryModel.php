@@ -56,9 +56,11 @@ class HistoryModel {
     }
 
     public function getHistoriesByUserIdGroupByAnswererUserId($userId) {
-        $query = "SELECT * FROM " . $table . " " .
+        $query = "SELECT histories.answerer_user_id, users.name, COUNT(histories.id) AS correct_answer FROM " . $table . " " .
             "INNER JOIN questions ON questions.id = histories.question_id " .
+            "INNER JOIN users ON users.id = histories.answerer_user_id " .
             "WHERE questions.user_id = :user_id " .
+            "AND histories.is_correct = true " .
             "GROUP BY histories.answerer_user_id";
 
         $this->db->query($query);

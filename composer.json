@@ -1,6 +1,7 @@
 {
     "require": {
         "vlucas/phpdotenv": "^5.3",
-        "bramus/router": "^1.6"
+        "bramus/router": "^1.6",
+        "hidehalo/nanoid-php": "^1.1"
     }
 }

@@ -23,10 +23,10 @@ class UserModel {
         return $this->db->rowCount();
     }
 
-    public function getUser($id) {
-        $query = "SELECT * FROM " . $table . " WHERE id = :id";
+    public function getUserBySecondaryId($secondaryId) {
+        $query = "SELECT * FROM " . $table . " WHERE secondary_id = :secondary_id";
         $this->db->query($query);
-        $this->db->bind('id', $id);
+        $this->db->bind('secondary_id', $secondaryId);
         return $this->db->single();
     }
 }
