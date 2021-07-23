@@ -2,6 +2,4 @@
 
 if( !session_id() ) session_start();
 
-require_once '../app';
-
-$app = new App;
+require_once '../app/index.php';
