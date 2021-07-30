@@ -1,7 +1,5 @@
 <?php
 
-use App\Core\Controller;
-
 class QuestionController extends Controller {
 
     public function insert($data) {

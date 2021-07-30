@@ -1,9 +1,5 @@
 <?php
 
-namespace App\Models;
-
-use App\Core\Database;
-
 class QuestionModel {
     private $table = 'questions';
     private $db;
@@ -13,7 +9,7 @@ class QuestionModel {
     }
 
     public function insert($data) {
-        $query = "INSERT INTO " . $table . "(user_id, question, answer_a, answer_b, answer_c, answer_d, correct_answer) " .
+        $query = "INSERT INTO questions(user_id, question, answer_a, answer_b, answer_c, answer_d, correct_answer) " .
             "VALUES(:user_id, :question, :answer_a, :answer_b, :answer_c, :answer_d, :correct_answer)";
         $this->db->query($query);
         $this->db->bind('user_id', $data['user_id']);
@@ -29,7 +25,7 @@ class QuestionModel {
     }
 
     public function update($id, $data) {
-        $query = "UPDATE " . $table . "SET ".
+        $query = "UPDATE questionsSET ".
             "user_id = :user_id," .
             "question = :question," .
             "answer_a = :answer_a," .
@@ -53,7 +49,7 @@ class QuestionModel {
     }
 
     public function delete($id) {
-        $query = "DELETE FROM " . $table . " WHERE id = :id";
+        $query = "DELETE FROM questions WHERE id = :id";
         $this->db->query($query);
         $this->db->execute();
 
@@ -61,7 +57,7 @@ class QuestionModel {
     }
 
     public function getPreviousQuestionByIdAndSecondaryId($id, $secondaryId) {
-        $query = "SELECT * FROM " . $table . " " .
+        $query = "SELECT * FROM questions " .
             "INNER JOIN users ON users.id = questions.user_id " .
             "WHERE questions.id < :id AND users.secondary_id = :secondary_id " .
             "ORDER BY questions.id DESC";
@@ -73,7 +69,7 @@ class QuestionModel {
     }
 
     public function getNextQuestionByIdAndSecondaryId($id, $secondaryId) {
-        $query = "SELECT * FROM " . $table . " " .
+        $query = "SELECT * FROM questions " .
             "INNER JOIN users ON users.id = questions.user_id " .
             "WHERE questions.id > :id AND users.secondary_id = :secondary_id " .
             "ORDER BY questions.id ASC";
@@ -85,7 +81,7 @@ class QuestionModel {
     }
 
     public function getQuestionsBySecondaryId($secondaryId) {
-        $query = "SELECT * FROM " . $table . " " .
+        $query = "SELECT * FROM questions " .
             "INNER JOIN users ON users.id = questions.user_id " .
             "WHERE users.secondary_id = :secondary_id " .
             "ORDER BY questions.id ASC";

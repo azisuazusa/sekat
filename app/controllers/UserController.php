@@ -1,6 +1,5 @@
 <?php
 
-use App\Core\Controller;
 use Hidehalo\Nanoid\Client;
 
 class UserController extends Controller {
@@ -10,7 +9,11 @@ class UserController extends Controller {
         $data['secondary_id'] = $nanoId->generateId($size = 8);
         $insert = $this->model('UserModel')->insert($data);
         echo json_encode([
-            'success' => $insert > 0
+            'success' => $insert > 0,
+            'data' => [
+                'id' => $insert,
+                'secondary_id' => $nanoId
+            ]
         ]);
     }
 }

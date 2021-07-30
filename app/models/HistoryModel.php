@@ -1,9 +1,5 @@
 <?php
 
-namespace App\Models;
-
-use App\Core\Database;
-
 class HistoryModel {
     private $table = 'histories';
     private $db;

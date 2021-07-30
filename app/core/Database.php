@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Core;
-
 class Database{
 	private $host = DB_HOST;
 	private $user = DB_USER;
@@ -25,7 +23,11 @@ class Database{
 		}catch(PDOException $e){
 			die($e->getMessage());
 		}
-	}
+    }
+
+    public function lastInsertId() {
+        return $this->dbh->lastInsertId();
+    }
 
 
 	public function query($query)

@@ -1,7 +1,5 @@
 <?php
 
-use App\Core\Controller;
-
 class HistoryController extends Controller {
 
     public function score($answererUserId, $secondaryId) {
