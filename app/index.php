@@ -18,25 +18,34 @@ spl_autoload_register(function ($class) {
 });
 
 $router = new \Bramus\Router\Router();
-$homeController = new HomeController();
+$questionerController = new QuestionerController();
+$answererController = new AnswererController();
 $userController = new UserController();
 $historyController = new HistoryController();
 $questionController = new QuestionController();
 
-$router->get('/', function() use ($homeController) {
-    $homeController->index();
+$router->get('/', function() use ($questionerController) {
+    $questionerController->index();
 });
 
-$router->get('/create-quiz/{id}', function($id) use ($homeController) {
-    $homeController->createQuiz($id);
+$router->get('/create-quiz/{id}', function($id) use ($questionerController) {
+    $questionerController->createQuiz($id);
 });
 
-$router->get('/finish/{userId}', function($userId) use ($homeController) {
-    $homeController->finish($userId);
+$router->get('/finish/{userId}', function($userId) use ($questionerController) {
+    $questionerController->finish($userId);
+});
+
+$router->get('/answer-quiz/questioner-secondary-id/{secondaryId}/answerer-user-id/{userId}', function($secondaryId, $userId) use ($answererController) {
+    $answererController->answerQuiz($secondaryId, $userId);
 });
 
 $router->post('/users', function() use ($userController) {
     $userController->insert($_POST);
+});
+
+$router->get('/questions/secondary-id/{secondaryId}', function($secondaryId) use ($questionController) {
+    $questionController->questions($secondaryId);
 });
 
 $router->post('/questions', function() use ($questionController) {
@@ -54,18 +63,26 @@ $router->get('/questions/previous/{id}', function($id) use ($questionController)
 $router->get('/questions/next/{id}', function($id) use ($questionController) {
     $questionController->next($id);
 });
-$router->get('/questions/secondary-id/{secondaryId}', function($secondaryId) use ($questionController) {
-    $questionController->next($secondaryId);
-});
 
 $router->post('/histories', function() use ($historyController) {
     $historyController->insert($_POST);
 });
+
+$router->post('/histories/answer', function() use ($historyController) {
+    $historyController->answer($_POST);
+});
+
 $router->put('/histories/{id}', function($id) use ($historyController) {
     $historyController->update($id, $_POST);
 });
-$router->get('/histories/score/answerer-user-id/{answererUserId}/secondary-id/{secondaryId}', function($answererUserId, $secondaryId) use ($historyController) {
-    $historyController->score($answererUserId, $secondaryId);
+
+$router->get('/answer-quiz/score/questioner-secondary-id/{secondaryId}/answerer-user-id/{answererUserId}', function($secondaryId, $answererUserId) use ($historyController) {
+    $historyController->score($secondaryId, $answererUserId);
 });
+
+$router->get('/{secondaryId}', function($secondaryId) use ($answererController) {
+    $answererController->index($secondaryId);
+});
+
 
 $router->run();

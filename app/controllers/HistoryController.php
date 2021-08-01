@@ -2,45 +2,54 @@
 
 class HistoryController extends Controller {
 
-    public function score($answererUserId, $secondaryId) {
+    public function score($secondaryId, $answererUserId) {
         $user = $this->model('UserModel')->getUserBySecondaryId($secondaryId);
         $questions = $this->model('QuestionModel')->getQuestionsBySecondaryId($secondaryId);
-        $histories = $this->model('HistoryModel')->getHistoriesByAnswererUserIdAndUserId($answererUserId, $user->id);
+        $questionsLength = count($questions);
+        $histories = $this->model('HistoryModel')->getHistoriesByAnswererUserIdAndUserId($answererUserId, $user['id']);
 
-        $correctAnswer = array_filter($histories, function($v, $k) {
-            return $v->is_correct == true;
+        $correctAnswer = array_filter($histories, function($v) {
+            return $v['is_correct'] == "1";
         });
-        $score = count($correctAnswer) * (count($questions) / 100);
+        $score = count($correctAnswer) * (100 / $questionsLength);
 
         $questionsResult = array_map(function($v) {
             return [
-                'question' => $v->question,
-                'answerer_answer' => $v->answer,
-                'is_correct' => $v->is_correct,
-                'correct_answer' => $v->correct_answer
+                'question' => $v['question'],
+                'answerer_answer' => $v['answer'],
+                'is_correct' => $v['is_correct'],
+                'correct_answer' => $v['correct_answer']
             ];
         }, $histories);
 
-        $historiesGroupByAnswererId = $this->model('HistoryModel')->getHistoriesByUserIdGroupByAnswererUserId($user->id);
-        $scoreBoard = array_map(function($v) {
+        $historiesGroupByAnswererId = $this->model('HistoryModel')->getHistoriesByUserIdGroupByAnswererUserId($user['id']);
+        $scoreBoard = array_map(function($v) use ($questionsLength) {
             return [
-                'name' => $v->name,
-                'score' => $v->correct_answer * (count($questions) / 100)
+                'name' => $v['name'],
+                'score' => $v['correct_answer'] * (100 / $questionsLength)
             ];
         }, $historiesGroupByAnswererId);
 
-        echo json_encode([
-            'success' => true,
-            'data' => [
-                'questioner_name' => $user->name,
-                'score' => $score,
-                'questions' => $questionsResult,
-                'score_board' => $scoreBoard
-            ]
-        ]);
+        $data = [
+            'questioner_name' => $user['name'],
+            'score' => $score,
+            'questions' => $questionsResult,
+            'score_board' => $scoreBoard
+        ];
+
+        $this->view('answerer/finish', $data);
     }
 
     public function insert($data) {
+        $insert = $this->model('HistoryModel')->insert($data);
+        echo json_encode([
+            'success' => $insert > 0
+        ]);
+    }
+
+    public function answer($data) {
+        $question = $this->model('QuestionModel')->getQuestionById($data['question_id']);
+        $data['is_correct'] = $data['answer'] == $question['correct_answer'];
         $insert = $this->model('HistoryModel')->insert($data);
         echo json_encode([
             'success' => $insert > 0

@@ -81,7 +81,7 @@ class QuestionModel {
     }
 
     public function getQuestionsBySecondaryId($secondaryId) {
-        $query = "SELECT * FROM questions " .
+        $query = "SELECT questions.* FROM questions " .
             "INNER JOIN users ON users.id = questions.user_id " .
             "WHERE users.secondary_id = :secondary_id " .
             "ORDER BY questions.id ASC";
@@ -89,5 +89,12 @@ class QuestionModel {
         $this->db->query($query);
         $this->db->bind('secondary_id', $secondaryId);
         return $this->db->resultSet();
+    }
+
+    public function getQuestionById($id) {
+        $query = "SELECT * FROM questions WHERE id = :id";
+        $this->db->query($query);
+        $this->db->bind("id", $id);
+        return $this->db->single();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-class HomeController extends Controller {
+class QuestionerController extends Controller {
 
     public function index() {
         $this->view('questioner/index');

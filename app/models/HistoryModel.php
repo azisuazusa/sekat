@@ -4,12 +4,12 @@ class HistoryModel {
     private $table = 'histories';
     private $db;
 
-    public function __contruct() {
+    public function __construct() {
         $this->db = new Database();
     }
 
     public function insert($data) {
-        $query = "INSERT INTO " . $table . "(answerer_user_id, answer, is_correct, question_id) " .
+        $query = "INSERT INTO histories (answerer_user_id, answer, is_correct, question_id) " .
             "VALUES(:answerer_user_id, :answer, :is_correct, :question_id)";
         $this->db->query($query);
         $this->db->bind('answerer_user_id', $data['answerer_user_id']);
@@ -22,7 +22,7 @@ class HistoryModel {
     }
 
     public function update($id, $data) {
-        $query = "UPDATE " . $table . "SET ".
+        $query = "UPDATE histories SET ".
             "answerer_user_id = :answerer_user_id," .
             "answer = :answer," .
             "is_correct = :is_correct," .
@@ -40,7 +40,7 @@ class HistoryModel {
     }
 
     public function getHistoriesByAnswererUserIdAndUserId($answererUserId, $userId) {
-        $query = "SELECT * FROM " . $table . " " .
+        $query = "SELECT * FROM histories ".
             "INNER JOIN questions ON questions.id = histories.question_id " .
             "WHERE histories.answerer_user_id = :answerer_user_id " .
             "AND questions.user_id = :user_id";
@@ -52,7 +52,7 @@ class HistoryModel {
     }
 
     public function getHistoriesByUserIdGroupByAnswererUserId($userId) {
-        $query = "SELECT histories.answerer_user_id, users.name, COUNT(histories.id) AS correct_answer FROM " . $table . " " .
+        $query = "SELECT histories.answerer_user_id, users.name, COUNT(histories.id) AS correct_answer FROM histories ".
             "INNER JOIN questions ON questions.id = histories.question_id " .
             "INNER JOIN users ON users.id = histories.answerer_user_id " .
             "WHERE questions.user_id = :user_id " .

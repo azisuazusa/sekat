@@ -27,7 +27,7 @@ class QuestionController extends Controller {
         $question = $this->model('QuestionModel')->getPreviousQuestionByIdAndSecondaryId($id, $secondaryId);
 
         echo json_encode([
-            'success' => $question == false,
+            'success' => $question != false,
             'data' => $question
         ]);
     }
@@ -36,7 +36,7 @@ class QuestionController extends Controller {
         $question = $this->model('QuestionModel')->getNextQuestionByIdAndSecondaryId($id, $secondaryId);
 
         echo json_encode([
-            'success' => $question == false,
+            'success' => $question != false,
             'data' => $question
         ]);
     }
@@ -45,7 +45,7 @@ class QuestionController extends Controller {
         $questions = $this->model('QuestionModel')->getQuestionsBySecondaryId($secondaryId);
 
         echo json_encode([
-            'success' => $questions == false,
+            'success' => $questions != false,
             'data' => $questions
         ]);
     }
